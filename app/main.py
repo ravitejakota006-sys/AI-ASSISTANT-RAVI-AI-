@@ -1,6 +1,3 @@
-import os, json, math, uuid
-from pathlib import Path
-from dotenv import load_dotenv
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -23,7 +20,10 @@ app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
 GEMINI_KEY = os.getenv("GEMINI_API_KEY")
 gemini = genai.Client(api_key=GEMINI_KEY) if GEMINI_KEY else None
-qdrant = QdrantClient(url=os.getenv("QDRANT_URL", "http://localhost:6333"))
+qdrant = QdrantClient(
+    url=os.getenv("QDRANT_URL", "http://localhost:6333"),
+    api_key=os.getenv("QDRANT_API_KEY") or None
+)
 
 class ChatRequest(BaseModel):
     message: str
